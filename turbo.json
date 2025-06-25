@@ -23,7 +23,7 @@
     },
     "analyze": {
       "outputs": ["analyze/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["^build"]
     },
     "clean": {
       "cache": false
