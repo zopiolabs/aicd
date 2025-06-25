@@ -149,6 +149,10 @@ jobs:
           touch packages/cms/.env.local
           echo "BASEHUB_TOKEN=${{ secrets.BASEHUB_TOKEN }}" >> packages/cms/.env.local
 
+      # Run Biome linter via ultracite for code quality
+      - name: Lint
+        run: pnpm lint
+
       # Build all packages and generate bundle size analysis
       - name: Build with bundle analysis
         run: pnpm analyze
@@ -159,10 +163,6 @@ jobs:
         with:
           name: bundle-analysis
           path: apps/**/.next/analyze/*.html
-
-      # Run Biome linter via ultracite for code quality
-      - name: Lint
-        run: pnpm lint
 
       # Ensure TypeScript types are valid across the monorepo
       - name: Typecheck
