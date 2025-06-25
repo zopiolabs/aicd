@@ -1,19 +1,17 @@
-// Database package
 export interface DatabaseConfig {
-  connectionString: string;
-  poolSize?: number;
+  host: string;
+  port: number;
+  database: string;
 }
 
 export class Database {
-  constructor(private config: DatabaseConfig) {}
+  private config: DatabaseConfig;
 
-  async connect(): Promise<void> {
-    console.log('Connecting to database...');
+  constructor(config: DatabaseConfig) {
+    this.config = config;
   }
 
-  async disconnect(): Promise<void> {
-    console.log('Disconnecting from database...');
+  connect(): void {
+    console.log(`Connecting to ${this.config.host}:${this.config.port}/${this.config.database}`);
   }
 }
-
-export default Database;
