@@ -25,6 +25,7 @@
     "resolveJsonModule": true,
     "incremental": true,
     "composite": true,
+    "disableSourceOfProjectReferenceRedirect": true,
     "baseUrl": ".",
     "paths": {
       "@aicd/core": ["packages/core/src"],
@@ -43,5 +44,14 @@
       "@aicd/web/*": ["packages/web/src/*"]
     }
   },
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/database" },
+    { "path": "./packages/auth" },
+    { "path": "./packages/cms" },
+    { "path": "./packages/api" },
+    { "path": "./packages/app" },
+    { "path": "./packages/web" }
+  ],
   "exclude": ["node_modules", "dist", "build", "coverage", ".turbo", ".next", "out"]
 }
