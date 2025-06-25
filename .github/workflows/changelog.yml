@@ -19,6 +19,8 @@
 #   - pull-requests: write (for PR interactions)
 
 name: Generate Changelog
+# Temporarily disabled in favor of the auto tool in release.yml
+if: false
 
 on:
   push:

@@ -1,0 +1,11 @@
+{
+  "plugins": [
+    "npm",
+    "first-time-contributor",
+    "released"
+  ],
+  "owner": "zopiolabs",
+  "repo": "aicd",
+  "name": "Auto Release Bot",
+  "email": "admin@zopio.com"
+}

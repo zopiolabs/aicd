@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     # CRITICAL: Prevent infinite loop - skip if commit message contains 'ci skip' or 'skip ci'
     # This is necessary because 'auto' creates commits, which would trigger this workflow again
-    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
+    if: ${{ !contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,7 +51,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 10.11.0
+          version: 8.15.0
           run_install: false  # We'll install manually later
 
       - name: Install Node.js
@@ -88,5 +88,3 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # For GitHub releases and commits
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}     # For NPM package publishing
         run: npx auto shipit
-        # Continue on error to prevent workflow failures if release already exists
-        continue-on-error: true
