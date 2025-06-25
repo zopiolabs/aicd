@@ -1,0 +1,26 @@
+{
+  "name": "@aicd/web",
+  "version": "0.0.1",
+  "private": true,
+  "description": "AICD web application",
+  "scripts": {
+    "dev": "echo 'Starting web development server...'",
+    "build": "echo 'Building web app...'",
+    "start": "echo 'Starting production server...'",
+    "test": "vitest",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .next out node_modules .turbo",
+    "analyze": "echo 'Analyzing web bundle...'"
+  },
+  "dependencies": {
+    "@aicd/core": "workspace:*",
+    "@aicd/auth": "workspace:*",
+    "@aicd/cms": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  }
+}

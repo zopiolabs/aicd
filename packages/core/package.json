@@ -1,0 +1,22 @@
+{
+  "name": "@aicd/core",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Core utilities and shared code for AICD",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "test": "vitest",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules .turbo",
+    "analyze": "echo 'Analyzing core package...'"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  }
+}

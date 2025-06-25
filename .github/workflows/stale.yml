@@ -1,0 +1,112 @@
+# Stale Issue and Pull Request Management
+#
+# Purpose: Automatically identifies and closes inactive issues/PRs to keep
+#          the repository clean and encourage timely responses.
+#
+# Triggers:
+#   - Scheduled: Daily at 1:00 AM UTC
+#   - Manual: Via workflow_dispatch
+#
+# Behavior:
+#   Issues:
+#     - Marked stale after 60 days of inactivity
+#     - Closed 14 days after being marked stale
+#   PRs:
+#     - Marked stale after 30 days of inactivity
+#     - Closed 7 days after being marked stale
+#
+# Exemptions:
+#   - security, pinned, good first issue, help wanted labels
+#   - high/critical priority items
+#   - blocked or needs discussion items
+#
+# Configuration:
+#   - Processes 30 items per run to avoid rate limits
+#   - Removes stale label when updated
+#   - Processes oldest items first
+
+name: Mark Stale Issues and PRs
+
+on:
+  schedule:
+    # Run daily at 1:00 AM UTC for consistent processing
+    - cron: "0 1 * * *"
+  workflow_dispatch:  # Allow manual trigger for immediate processing
+
+permissions:
+  issues: write        # Mark and close issues
+  pull-requests: write # Mark and close PRs
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mark stale issues and PRs
+        uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Message posted when marking issues as stale
+          stale-issue-message: |
+            👋 This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs within 14 days.
+            
+            If this issue is still relevant:
+            - Please leave a comment to let us know
+            - Add more context or updates
+            - Consider submitting a PR if you're able to help
+            
+            Thank you for your contributions to Zopio! 🙏
+          
+          # Message posted when closing stale issues
+          close-issue-message: |
+            🔒 This issue has been automatically closed due to inactivity. 
+            
+            If you believe this issue is still relevant:
+            - Please open a new issue with updated context
+            - Reference this closed issue for history
+            - Consider joining our [GitHub Discussions](https://github.com/zopiolabs/zopio/discussions) for ongoing conversations
+            
+            Thank you for your understanding and contributions to Zopio!
+          
+          # Issue timing configuration
+          days-before-issue-stale: 60  # 2 months before marking stale
+          days-before-issue-close: 14  # 2 weeks after stale to close
+          stale-issue-label: 'stale'
+          # Labels that prevent issues from going stale
+          exempt-issue-labels: 'security,pinned,good first issue,help wanted,priority: critical,priority: high,status: blocked,status: needs discussion'
+          
+          # Message posted when marking PRs as stale
+          stale-pr-message: |
+            👋 This pull request has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs within 7 days.
+            
+            If this PR is still relevant:
+            - Please resolve any merge conflicts
+            - Ensure all CI checks are passing
+            - Respond to any review comments
+            - Leave a comment to let us know the status
+            
+            We appreciate your contribution to Zopio! 🙏
+          
+          # Message posted when closing stale PRs
+          close-pr-message: |
+            🔒 This pull request has been automatically closed due to inactivity.
+            
+            If you'd like to continue working on this:
+            - Please open a new PR with your changes
+            - Reference this closed PR for context
+            - Ensure it's up to date with the latest main branch
+            
+            Thank you for your efforts to improve Zopio!
+          
+          # PR timing configuration (more aggressive than issues)
+          days-before-pr-stale: 30  # 1 month before marking stale
+          days-before-pr-close: 7   # 1 week after stale to close
+          stale-pr-label: 'stale'
+          # Labels that prevent PRs from going stale
+          exempt-pr-labels: 'security,pinned,priority: critical,priority: high,status: blocked,status: needs discussion'
+          
+          # General configuration
+          operations-per-run: 30          # Limit to avoid rate limits
+          remove-stale-when-updated: true # Remove stale label on activity
+          ascending: true                 # Process oldest items first
+          enable-statistics: true         # Log statistics for monitoring

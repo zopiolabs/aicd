@@ -1,0 +1,27 @@
+{
+  "name": "@aicd/api",
+  "version": "0.0.1",
+  "private": true,
+  "description": "AICD API server",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "echo 'Starting API development server...'",
+    "build": "echo 'Building API server...'",
+    "start": "echo 'Starting API server...'",
+    "test": "vitest",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules .turbo",
+    "analyze": "echo 'Analyzing API bundle...'"
+  },
+  "dependencies": {
+    "@aicd/core": "workspace:*",
+    "@aicd/auth": "workspace:*",
+    "@aicd/database": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  }
+}

@@ -1,0 +1,107 @@
+# Documentation Workflow
+#
+# Purpose: Lightweight workflow for documentation-only changes that performs
+#          basic validation without running the full CI/CD pipeline.
+#
+# Triggers:
+#   - Push to: main, develop, staging branches (docs paths only)
+#   - PRs to: main, develop, staging branches (docs paths only)
+#
+# Jobs:
+#   1. Validate Structure: Check for required documentation files
+#
+# Features:
+#   - Fast execution (~10 seconds)
+#   - Minimal validation for documentation changes
+#   - Checks for README.md and CHANGELOG.md existence
+
+name: Documentation
+
+on:
+  push:
+    branches: [ main, develop, staging ]
+    paths:
+      - '**/*.md'
+      - 'docs/**'
+      - '.github/*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - 'CHANGELOG.md'
+      - 'README.md'
+  pull_request:
+    branches: [ main, develop, staging, 'release/*', 'v[0-9]*.[0-9]*' ]
+    paths:
+      - '**/*.md'
+      - 'docs/**'
+      - '.github/*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - 'CHANGELOG.md'
+      - 'README.md'
+
+jobs:
+  validate-structure:
+    name: Validate Documentation Structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Ensure critical documentation files exist
+      - name: Check required documentation files
+        run: |
+          echo "Checking for required documentation files..."
+          
+          # List of required files (removed LICENSE)
+          required_files=(
+            "README.md"
+            "CHANGELOG.md"
+          )
+          
+          missing_files=()
+          
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              missing_files+=("$file")
+            fi
+          done
+          
+          if [ ${#missing_files[@]} -ne 0 ]; then
+            echo "❌ Missing required documentation files:"
+            printf '%s\n' "${missing_files[@]}"
+            exit 1
+          else
+            echo "✅ All required documentation files are present"
+          fi
+
+      # Validate documentation structure and formatting
+      - name: Validate documentation structure
+        run: |
+          echo "Validating documentation structure..."
+          
+          # Check if README.md has required sections
+          if [ -f "README.md" ]; then
+            echo "Checking README.md structure..."
+            
+            # Look for common required sections
+            if ! grep -q "# " README.md; then
+              echo "⚠️  README.md should have a main heading"
+            fi
+            
+            if ! grep -q -i "installation\|getting started\|setup" README.md; then
+              echo "⚠️  README.md should include installation/setup instructions"
+            fi
+            
+            echo "✅ README.md structure validation complete"
+          fi
+          
+          # Check if CHANGELOG.md follows conventional format
+          if [ -f "CHANGELOG.md" ]; then
+            echo "Checking CHANGELOG.md format..."
+            
+            if ! grep -q "# " CHANGELOG.md; then
+              echo "⚠️  CHANGELOG.md should have version headings"
+            fi
+            
+            echo "✅ CHANGELOG.md format validation complete"
+          fi

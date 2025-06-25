@@ -1,0 +1,135 @@
+# Automated Pull Request Assignment
+#
+# Purpose: Automatically assigns PRs to their authors and suggests reviewers
+#          based on the files changed. Helps streamline the PR review process.
+#
+# Triggers:
+#   - PR opened
+#   - PR marked as ready for review (converted from draft)
+#
+# Features:
+#   - Auto-assigns PR to its author for tracking
+#   - Assigns team reviewers based on code ownership:
+#     - auth packages -> core team
+#     - database changes -> core team
+#     - core/crud/data packages -> core team
+#     - security-related files -> core team
+#   - Skips assignment if already assigned
+#   - Only assigns reviewers to non-draft PRs
+
+name: Auto Assign PR
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+# Prevent duplicate assignment runs
+concurrency:
+  group: assign-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  assign-author:
+    runs-on: ubuntu-latest
+    steps:
+      # Automatically assign PR to its author for better tracking
+      - name: Assign PR to author
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            
+            // Only assign if no assignees exist to avoid overwriting manual assignments
+            if (pr.assignees.length === 0) {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                assignees: [pr.user.login]  // Assign to PR author
+              });
+            }
+
+  assign-reviewers:
+    runs-on: ubuntu-latest
+    # Only assign reviewers to non-draft PRs
+    if: github.event.pull_request.draft == false
+    steps:
+      # Intelligently assign reviewers based on files changed
+      - name: Auto assign reviewers based on files
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            
+            // Check if PR already has reviewers to avoid overwriting
+            const reviews = await github.rest.pulls.listRequestedReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+            
+            if (reviews.data.users.length > 0 || reviews.data.teams.length > 0) {
+              console.log('PR already has reviewers assigned');
+              return;
+            }
+            
+            // Fetch list of files changed in this PR
+            const files = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+            
+            const changedPaths = files.data.map(f => f.filename);
+            const reviewers = new Set();      // Individual reviewers
+            const teamReviewers = new Set();  // Team reviewers
+            
+            // Define code ownership rules based on file paths
+            
+            // Authentication system changes
+            const hasAuthChanges = changedPaths.some(path => 
+              path.includes('packages/auth') ||      // Main auth package
+              path.includes('packages/auth-')        // Auth-related packages (auth-rbac, etc.)
+            );
+            
+            // Database schema or configuration changes
+            const hasDatabaseChanges = changedPaths.some(path => 
+              path.includes('packages/database')
+            );
+            
+            // Core framework changes that affect the entire system
+            const hasCoreChanges = changedPaths.some(path => 
+              path.includes('packages/core') ||      // Core utilities
+              path.includes('packages/crud') ||      // CRUD framework
+              path.includes('packages/data')         // Data providers
+            );
+            
+            // Security-sensitive changes requiring careful review
+            const hasSecurityChanges = changedPaths.some(path => 
+              path.includes('security') ||           // Security configs
+              path.includes('.env') ||               // Environment variables
+              path.includes('auth')                  // Any auth-related files
+            );
+            
+            // Assign core team for critical system changes
+            if (hasAuthChanges || hasDatabaseChanges || hasCoreChanges || hasSecurityChanges) {
+              teamReviewers.add('core');
+            }
+            
+            // Request reviews from identified teams
+            if (teamReviewers.size > 0) {
+              try {
+                await github.rest.pulls.requestReviewers({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  team_reviewers: Array.from(teamReviewers)
+                });
+                console.log(`Assigned team reviewers: ${Array.from(teamReviewers).join(', ')}`);
+              } catch (error) {
+                // Team might not exist or bot might not have permissions
+                console.error('Error assigning reviewers:', error);
+              }
+            }

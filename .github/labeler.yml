@@ -1,0 +1,89 @@
+# Label automation configuration for pull requests
+# This file is used by the labeler action to automatically add labels based on file paths
+# Updated to v5 syntax - see https://github.com/actions/labeler
+
+# Core packages
+"package: core":
+  - any: ['packages/core/**/*']
+
+"package: auth":
+  - any: ['packages/auth/**/*', 'packages/auth-*/**/*']
+
+"package: database":
+  - any: ['packages/database/**/*']
+
+"package: ui":
+  - any: ['packages/ui/**/*', 'packages/design-system/**/*']
+
+"package: data":
+  - any: ['packages/data/**/*']
+
+"package: crud":
+  - any: ['packages/crud/**/*']
+
+"package: api":
+  - any: ['packages/api/**/*']
+
+"package: cms":
+  - any: ['packages/cms/**/*']
+
+# Apps
+"app: api":
+  - any: ['apps/api/**/*']
+
+"app: web":
+  - any: ['apps/web/**/*', 'apps/app/**/*']
+
+"app: docs":
+  - any: ['apps/docs/**/*']
+
+"app: studio":
+  - any: ['apps/studio/**/*']
+
+"app: storybook":
+  - any: ['apps/storybook/**/*']
+
+# Documentation
+"documentation":
+  - any: ['**/*.md', 'docs/**/*', '.github/*.md', '.github/ISSUE_TEMPLATE/**', '.github/PULL_REQUEST_TEMPLATE.md', 'LICENSE', 'CHANGELOG.md', 'README.md', '**/*.txt']
+
+# Documentation: Specific types
+"docs: readme":
+  - any: ['README.md', '**/README.md']
+
+"docs: changelog":
+  - any: ['CHANGELOG.md', '**/CHANGELOG.md']
+
+"docs: contributing":
+  - any: ['CONTRIBUTING.md', '.github/CONTRIBUTING.md']
+
+"docs: api":
+  - any: ['docs/api/**/*', '**/api.md']
+
+# Configuration
+"configuration":
+  - any: ['*.json', '*.yaml', '*.yml', '.github/**/*.yml', '.github/**/*.yaml']
+
+# Dependencies
+"dependencies":
+  - any: ['package.json', 'pnpm-lock.yaml', '**/package.json']
+
+# Testing
+"testing":
+  - any: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx', '**/tests/**/*', 'vitest.config.*']
+
+# CI/CD
+"ci/cd":
+  - any: ['.github/workflows/**/*', 'scripts/**/*']
+
+# Security
+"security":
+  - any: ['.github/SECURITY.md', '**/security/**/*', '**/auth/**/*']
+
+# Internationalization
+"i18n":
+  - any: ['packages/internationalization/**/*', 'dictionaries/**/*']
+
+# Infrastructure
+"infrastructure":
+  - any: ['docker/**/*', 'Dockerfile*', 'docker-compose*', '**/infra/**/*']
