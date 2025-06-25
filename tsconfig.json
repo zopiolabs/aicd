@@ -10,10 +10,8 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": ".",
     "removeComments": false,
-    "noEmit": false,
+    "noEmit": true,
     "importHelpers": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
@@ -27,7 +25,24 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "incremental": true,
-    "composite": true
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@aicd/core": ["packages/core/src"],
+      "@aicd/core/*": ["packages/core/src/*"],
+      "@aicd/database": ["packages/database/src"],
+      "@aicd/database/*": ["packages/database/src/*"],
+      "@aicd/auth": ["packages/auth/src"],
+      "@aicd/auth/*": ["packages/auth/src/*"],
+      "@aicd/cms": ["packages/cms/src"],
+      "@aicd/cms/*": ["packages/cms/src/*"],
+      "@aicd/api": ["packages/api/src"],
+      "@aicd/api/*": ["packages/api/src/*"],
+      "@aicd/app": ["packages/app/src"],
+      "@aicd/app/*": ["packages/app/src/*"],
+      "@aicd/web": ["packages/web/src"],
+      "@aicd/web/*": ["packages/web/src/*"]
+    }
   },
   "exclude": ["node_modules", "dist", "build", "coverage", ".turbo", ".next", "out"]
 }
