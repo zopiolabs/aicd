@@ -48,3 +48,8 @@ yarn-error.log*
 .windsurfrules
 .github/copilot-instructions.md
 .aiprompts
+
+# Branch Protection Config
+branch-protection-develop.json
+branch-protection-main.json
+branch-protection-staging.json
