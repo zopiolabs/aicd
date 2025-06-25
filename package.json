@@ -1,6 +1,6 @@
 {
   "name": "aicd",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "description": "AI-powered continuous deployment platform",
   "author": "zopio",
