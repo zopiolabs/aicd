@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import CMS, { type Content } from './index';
+import CMS from './index';
 
 describe('CMS', () => {
   it('should create a CMS instance', () => {
