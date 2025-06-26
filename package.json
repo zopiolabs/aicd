@@ -24,6 +24,7 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "build": "turbo run build",
+    "build:cli": "tsup",
     "dev": "turbo run dev",
     "clean": "turbo run clean",
     "format": "biome format --write .",
@@ -34,6 +35,7 @@
     "@biomejs/biome": "^1.5.0",
     "@types/node": "^20.11.0",
     "husky": "^9.0.0",
+    "tsup": "^8.0.0",
     "turbo": "^1.12.0",
     "typescript": "^5.3.0",
     "vitest": "^1.2.0"

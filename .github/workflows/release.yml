@@ -35,7 +35,9 @@ jobs:
     runs-on: ubuntu-latest
     # CRITICAL: Prevent infinite loop - skip if commit message contains 'ci skip' or 'skip ci'
     # This is necessary because 'auto' creates commits, which would trigger this workflow again
-    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
+    if: |
+      !contains(github.event.head_commit.message, 'ci skip') &&
+      !contains(github.event.head_commit.message, 'skip ci')
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -80,7 +82,7 @@ jobs:
 
       # Build CLI package (required for release)
       - name: Build CLI
-        run: npx tsup
+        run: pnpm run build:cli
 
       # Run auto to handle versioning, changelog, and publishing
       - name: Create Release
