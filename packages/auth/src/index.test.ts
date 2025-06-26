@@ -10,10 +10,10 @@ describe('Auth', () => {
   it('should return null for any token (placeholder)', () => {
     const consoleSpy = vi.spyOn(console, 'log');
     const result = authenticate('test-token');
-    
+
     expect(result).toBeNull();
     expect(consoleSpy).toHaveBeenCalledWith('Authenticating token:', 'test-token');
-    
+
     consoleSpy.mockRestore();
   });
 
@@ -21,9 +21,9 @@ describe('Auth', () => {
     const user: User = {
       id: '123',
       email: 'test@example.com',
-      name: 'Test User'
+      name: 'Test User',
     };
-    
+
     const token = createToken(user);
     expect(token).toBe('token-123');
   });
