@@ -1,0 +1,97 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Colors for output
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo "🚀 Running pre-push checks..."
+
+# Get current branch name
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Branch naming validation (matching PR validation rules)
+VALID_BRANCH_REGEX="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|release|hotfix|deps|wip)\/[a-z0-9._-]+$|^(main|develop|staging|release\/v[0-9]+\.[0-9]+\.[0-9]+|version\/[0-9]+)$"
+
+if ! echo "$BRANCH" | grep -qE "$VALID_BRANCH_REGEX"; then
+  echo "${RED}❌ Invalid branch name: $BRANCH${NC}"
+  echo "Branch names must follow the pattern: type/description"
+  echo "Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert, release, hotfix, deps, wip"
+  echo "Or be one of: main, develop, staging, release/vX.Y.Z, version/X"
+  exit 1
+fi
+
+# Get the remote and branch being pushed to
+while read local_ref local_sha remote_ref remote_sha
+do
+  # Check commit messages for conventional commit format
+  echo "${BLUE}📋 Validating commit messages...${NC}"
+  
+  # Get all commits that will be pushed
+  if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+    # New branch, check all commits
+    COMMITS=$(git rev-list HEAD)
+  else
+    # Existing branch, check new commits only
+    COMMITS=$(git rev-list "$remote_sha..$local_sha")
+  fi
+  
+  INVALID_COMMITS=""
+  for commit in $COMMITS; do
+    MSG=$(git log --format=%s -n 1 "$commit")
+    # Check conventional commit format
+    if ! echo "$MSG" | grep -qE "^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .+$|^Merge |^Initial commit$"; then
+      INVALID_COMMITS="$INVALID_COMMITS\n  - $commit: $MSG"
+    fi
+  done
+  
+  if [ -n "$INVALID_COMMITS" ]; then
+    echo "${RED}❌ Invalid commit messages found:${NC}"
+    echo "$INVALID_COMMITS"
+    echo "${YELLOW}Commit messages must follow conventional commit format:${NC}"
+    echo "  type(scope?): description"
+    echo "  Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+    exit 1
+  fi
+done
+
+echo "${GREEN}✅ Branch name and commit messages are valid${NC}"
+
+# Run comprehensive checks
+echo "${BLUE}🧹 Running lint checks...${NC}"
+pnpm lint
+if [ $? -ne 0 ]; then
+  echo "${RED}❌ Linting failed!${NC}"
+  echo "Run 'pnpm lint:fix' to auto-fix issues"
+  exit 1
+fi
+
+echo "${BLUE}🔍 Running type checks...${NC}"
+pnpm typecheck
+if [ $? -ne 0 ]; then
+  echo "${RED}❌ Type checking failed!${NC}"
+  echo "Please fix TypeScript errors before pushing"
+  exit 1
+fi
+
+echo "${BLUE}🧪 Running tests...${NC}"
+CI=true pnpm test
+if [ $? -ne 0 ]; then
+  echo "${RED}❌ Tests failed!${NC}"
+  echo "Please fix failing tests before pushing"
+  exit 1
+fi
+
+echo "${BLUE}🏗️  Building project...${NC}"
+pnpm build
+if [ $? -ne 0 ]; then
+  echo "${RED}❌ Build failed!${NC}"
+  echo "Please fix build errors before pushing"
+  exit 1
+fi
+
+echo "${GREEN}✅ All pre-push checks passed!${NC}"
+echo "${GREEN}🎉 Ready to push to $BRANCH${NC}"
