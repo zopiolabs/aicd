@@ -1,3 +1,46 @@
+# v0.1.1 (Thu Jun 26 2025)
+
+### Release Notes
+
+#### release: v0.1.1 ([#5](https://github.com/zopiolabs/aicd/pull/5))
+
+This release includes:
+- New validateInput utility function in the core package
+- Updated pnpm version to 10.11.0 for consistency across the project
+- Regenerated lockfile for compatibility
+
+---
+
+#### 🐛 Bug Fix
+
+- release: v0.3.0 to production [#21](https://github.com/zopiolabs/aicd/pull/21) (uo@uozopio.com [@uozopio](https://github.com/uozopio))
+- release: v0.3.0 [#20](https://github.com/zopiolabs/aicd/pull/20) (uo@uozopio.com [@uozopio](https://github.com/uozopio))
+- feat: test release pipeline end-to-end [#19](https://github.com/zopiolabs/aicd/pull/19) (uo@uozopio.com [@uozopio](https://github.com/uozopio))
+- chore(release): update changelog for v0.2.0 [#11](https://github.com/zopiolabs/aicd/pull/11) (bot@zopio.dev [@github-actions[bot]](https://github.com/github-actions[bot]))
+- release: v0.2.1 - Deploy to production [#10](https://github.com/zopiolabs/aicd/pull/10) (uo@uozopio.com [@uozopio](https://github.com/uozopio))
+- release: v0.2.1 [#9](https://github.com/zopiolabs/aicd/pull/9) (uo@uozopio.com [@uozopio](https://github.com/uozopio))
+- feat: add version flag to CLI tool [#8](https://github.com/zopiolabs/aicd/pull/8) (uo@uozopio.com [@uozopio](https://github.com/uozopio))
+- release: v0.1.1 - Test Release Pipeline [#6](https://github.com/zopiolabs/aicd/pull/6) (uo@uozopio.com [@uozopio](https://github.com/uozopio))
+- release: v0.1.1 [#5](https://github.com/zopiolabs/aicd/pull/5) (uo@uozopio.com [@uozopio](https://github.com/uozopio))
+- feat: add validateInput utility function for release pipeline validation [#3](https://github.com/zopiolabs/aicd/pull/3) (uo@uozopio.com [@uozopio](https://github.com/uozopio))
+
+#### ⚠️ Pushed to `main`
+
+- fix: use PAT for release workflow authentication (uo@uozopio.com)
+- fix: resolve tsup TypeScript incremental build error (uo@uozopio.com)
+- fix: add tsconfig reference to tsup configuration (uo@uozopio.com)
+- fix: changelog generation with proper package.json version updates (uo@uozopio.com)
+- fix: resolve release workflow issues for branch protection and build dependencies (uo@uozopio.com)
+
+#### Authors: 4
+
+- [@github-actions[bot]](https://github.com/github-actions[bot])
+- [@uozopio](https://github.com/uozopio)
+- Umutcan ÖNER (uo@uozopio.com)
+- zopio-bot (bot@zopio.dev)
+
+---
+
 # [0.2.0](https://github.com/aicd/aicd/compare/v0.1.0...v0.2.0) (2025-06-26)
 
 
