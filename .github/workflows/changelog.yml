@@ -45,6 +45,11 @@ jobs:
           fetch-depth: 0  # Fetch complete history for accurate changelog generation
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
       - name: Generate changelog
         uses: TriPSs/conventional-changelog-action@v5
         id: changelog
@@ -65,11 +70,57 @@ jobs:
           release-count: 0
           # Update package.json version
           skip-version-file: false
+          version-file: './package.json'
+          version-path: 'version'
           # Skip commit and tag creation - we'll handle this via PR
           skip-commit: true
           skip-tag: true
+          # Skip git pull to avoid conflicts
+          skip-git-pull: true
           # Generate GitHub Action summary
           create-summary: true
+
+      # Debug: Show what files were modified
+      - name: Debug - Check modified files
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          echo "=== Git Status ==="
+          git status
+          echo ""
+          echo "=== Git Diff ==="
+          git diff --name-only
+          echo ""
+          echo "=== Package.json version ==="
+          cat package.json | grep '"version"'
+          echo ""
+          echo "=== CHANGELOG.md first 10 lines ==="
+          head -10 CHANGELOG.md
+
+      # Verify that package.json was updated
+      - name: Verify version update
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          EXPECTED_VERSION="${{ steps.changelog.outputs.version }}"
+          ACTUAL_VERSION=$(node -p "require('./package.json').version")
+          
+          if [ "$ACTUAL_VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "❌ Error: package.json version ($ACTUAL_VERSION) does not match expected version ($EXPECTED_VERSION)"
+            echo "This indicates the conventional-changelog-action failed to update package.json"
+            
+            # Manually update package.json if needed
+            echo "Attempting manual version update..."
+            npm version $EXPECTED_VERSION --no-git-tag-version
+            
+            # Verify the manual update worked
+            NEW_VERSION=$(node -p "require('./package.json').version")
+            if [ "$NEW_VERSION" != "$EXPECTED_VERSION" ]; then
+              echo "❌ Manual version update failed"
+              exit 1
+            fi
+            echo "✅ Manually updated package.json to version $EXPECTED_VERSION"
+          else
+            echo "✅ package.json version correctly updated to $EXPECTED_VERSION"
+          fi
 
       # Create a new branch for the changelog update
       - name: Create changelog branch
@@ -79,18 +130,38 @@ jobs:
           git config --local user.name "zopio-bot"
           BRANCH_NAME="changelog-update-${{ steps.changelog.outputs.version }}"
           git checkout -b $BRANCH_NAME
+          
+          # Check if files were actually modified
+          if git diff --quiet CHANGELOG.md; then
+            echo "❌ Error: CHANGELOG.md was not modified"
+            exit 1
+          fi
+          
+          # Add files and show what's being committed
           git add CHANGELOG.md package.json
-          git commit -m "chore(release): update changelog for v${{ steps.changelog.outputs.version }}"
+          echo "Files to be committed:"
+          git status --porcelain
+          
+          # Commit with detailed message
+          git commit -m "chore(release): update changelog for v${{ steps.changelog.outputs.version }}" \
+                     -m "- Updated CHANGELOG.md with version ${{ steps.changelog.outputs.version }}" \
+                     -m "- Updated package.json version to ${{ steps.changelog.outputs.version }}"
+          
           git push origin $BRANCH_NAME
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
       # Create PR for changelog update
       - name: Create Pull Request
+        id: create-pr
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            // Get the modified files
+            const { stdout: modifiedFiles } = await exec.getExecOutput('git', ['diff', '--name-only', 'origin/main']);
+            const filesList = modifiedFiles.trim().split('\n').filter(f => f);
+            
             const { data: pr } = await github.rest.pulls.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -102,11 +173,19 @@ jobs:
             This PR updates the CHANGELOG.md for version v${{ steps.changelog.outputs.version }}.
 
             ### Changes included:
-            - Updated CHANGELOG.md with latest changes
-            - Bumped version in package.json to ${{ steps.changelog.outputs.version }}
+            - ✅ Updated CHANGELOG.md with latest changes
+            - ✅ Bumped version in package.json to ${{ steps.changelog.outputs.version }}
+
+            ### Modified files:
+            ${filesList.map(f => `- \`${f}\``).join('\n')}
 
             ### Release notes:
             ${{ steps.changelog.outputs.clean_changelog }}
+
+            ### Validation:
+            - Repository: \`${{ github.repository }}\`
+            - Version: \`${{ steps.changelog.outputs.version }}\`
+            - Tag: \`${{ steps.changelog.outputs.tag }}\`
 
             ---
             *This PR was automatically generated by the changelog workflow.*`
@@ -114,6 +193,51 @@ jobs:
             
             core.setOutput('pull-request-number', pr.number);
             core.setOutput('pull-request-url', pr.html_url);
+            
+            // Log PR creation details
+            console.log(`✅ Created PR #${pr.number}: ${pr.html_url}`);
+
+      # Add PR validation comment
+      - name: Add validation comment to PR
+        if: ${{ steps.changelog.outputs.skipped == 'false' && steps.create-pr.outputs.pull-request-number }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = ${{ steps.create-pr.outputs.pull-request-number }};
+            
+            // Verify files in the PR
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+            
+            const hasChangelog = files.some(f => f.filename === 'CHANGELOG.md');
+            const hasPackageJson = files.some(f => f.filename === 'package.json');
+            
+            let validationMessage = '## 🔍 Automated Validation Results\n\n';
+            
+            if (hasChangelog && hasPackageJson) {
+              validationMessage += '✅ **All required files updated successfully:**\n';
+              validationMessage += '- CHANGELOG.md ✓\n';
+              validationMessage += '- package.json ✓\n\n';
+              validationMessage += '### Version Information\n';
+              validationMessage += `- New version: \`${{ steps.changelog.outputs.version }}\`\n`;
+              validationMessage += `- Tag to be created: \`${{ steps.changelog.outputs.tag }}\`\n`;
+            } else {
+              validationMessage += '❌ **Missing required files:**\n';
+              validationMessage += `- CHANGELOG.md: ${hasChangelog ? '✓' : '✗ MISSING'}\n`;
+              validationMessage += `- package.json: ${hasPackageJson ? '✓' : '✗ MISSING'}\n\n`;
+              validationMessage += '⚠️ **Action Required:** Please review and fix the missing files.\n';
+            }
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: validationMessage
+            });
 
       # Create GitHub release after PR is created
       - name: Create Release
@@ -123,7 +247,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.changelog.outputs.tag }}          # e.g., v1.2.3
-          release_name: ${{ steps.changelog.outputs.tag }}      # Release title
-          body: ${{ steps.changelog.outputs.clean_changelog }}  # Changelog content for this release
+          release_name: Release ${{ steps.changelog.outputs.tag }}  # Release title
+          body: |
+            ## What's Changed
+            
+            ${{ steps.changelog.outputs.clean_changelog }}
+            
+            ---
+            **Full Changelog**: https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md
+            
+            📝 Note: This release is in draft mode. It will be published when PR #${{ steps.create-pr.outputs.pull-request-number }} is merged.
           draft: true                                            # Create as draft until PR is merged
           prerelease: false                                     # Mark as stable release
