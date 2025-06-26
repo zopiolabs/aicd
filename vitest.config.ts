@@ -1,5 +1,5 @@
+import path from 'node:path';
 import { defineConfig } from 'vitest/config';
-import path from 'path';
 
 export default defineConfig({
   test: {
@@ -7,13 +7,7 @@ export default defineConfig({
     environment: 'node',
     coverage: {
       reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules',
-        'dist',
-        '**/*.d.ts',
-        '**/*.config.{js,ts}',
-        '**/mockData',
-      ],
+      exclude: ['node_modules', 'dist', '**/*.d.ts', '**/*.config.{js,ts}', '**/mockData'],
     },
     include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     exclude: ['**/node_modules/**', '**/dist/**', '**/build/**'],

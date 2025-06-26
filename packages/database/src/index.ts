@@ -8,7 +8,7 @@ export class Database {
   constructor(private config: DatabaseConfig) {}
 
   async connect(): Promise<void> {
-    console.log('Connecting to database...');
+    console.log(`Connecting to database with connection string: ${this.config.connectionString}`);
   }
 
   async disconnect(): Promise<void> {

@@ -1,6 +1,6 @@
+import { authenticate, createToken } from '@aicd/auth';
 // API Server Entry Point
 import { log } from '@aicd/core';
-import { authenticate, createToken } from '@aicd/auth';
 import Database from '@aicd/database';
 
 log('Starting AICD API Server...');
@@ -8,7 +8,7 @@ log('Starting AICD API Server...');
 // Placeholder API server
 export async function startServer() {
   const db = new Database({
-    connectionString: 'postgresql://localhost/aicd'
+    connectionString: 'postgresql://localhost/aicd',
   });
 
   await db.connect();
