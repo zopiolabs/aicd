@@ -3,11 +3,17 @@
 
 ### Bug Fixes
 
+* add missing test files for all packages and apps ([921f882](https://github.com/aicd/aicd/commit/921f882d36d17d09760788e033ebfe086ccf701f))
 * add release as valid PR type in validation workflow ([f07278a](https://github.com/aicd/aicd/commit/f07278a379c969a1522812ab6fdb74b97c62838e))
+* add tsconfig reference to tsup configuration ([0158d21](https://github.com/aicd/aicd/commit/0158d21568b1f9d791e4755c1557fbf308b51d50))
+* apply biome formatting to cms test file ([a94ccce](https://github.com/aicd/aicd/commit/a94cccecbda9dc4320157299f1a46e0f50ca0699))
 * changelog generation with proper package.json version updates ([dc24ad8](https://github.com/aicd/aicd/commit/dc24ad8715b47d51cc4b0b7e0ee51f27ef885bb6))
 * resolve all PR [#6](https://github.com/aicd/aicd/issues/6) blocking issues ([cb5488e](https://github.com/aicd/aicd/commit/cb5488ee04c349825055962422d7a74ce9c699df))
 * resolve PR [#6](https://github.com/aicd/aicd/issues/6) blocking issues ([622b4ed](https://github.com/aicd/aicd/commit/622b4ed81d926201e1573389be3683937ed0097a))
 * resolve release workflow issues for branch protection and build dependencies ([a08f2eb](https://github.com/aicd/aicd/commit/a08f2eb2f2d19dbd2396e94df2e39ee1950e79e4))
+* resolve tsup TypeScript incremental build error ([8d29b1c](https://github.com/aicd/aicd/commit/8d29b1cd9c997eb6c0d958ad1e5d19689c60c9e7))
+* resolve tsup TypeScript incremental build error ([8c38282](https://github.com/aicd/aicd/commit/8c382822344f36307c1c7371a95f2c6d2714db1f))
+* resolve tsup TypeScript incremental build error ([f901bdb](https://github.com/aicd/aicd/commit/f901bdb5fc958e1a2beef035184c03af9b69e44e))
 * resolve TypeScript unused import errors ([345fbd1](https://github.com/aicd/aicd/commit/345fbd13ec762c4350e354ad3b30ded63afc4797))
 * update pnpm version to match CI workflows ([1c11fe7](https://github.com/aicd/aicd/commit/1c11fe7c36867cc68c053fd67d97e50a851841f1))
 
@@ -16,6 +22,7 @@
 
 * add validateInput utility function for release pipeline validation ([7245526](https://github.com/aicd/aicd/commit/72455260ead4ff443b2097302d27d8adf329dbc3))
 * add version flag to CLI tool ([a727ccb](https://github.com/aicd/aicd/commit/a727ccb6412b25fd5b4598460de32b7e413e1237))
+* **core:** add formatDate utility function for consistent date formatting ([4d9d90d](https://github.com/aicd/aicd/commit/4d9d90d2191c8c56ca59e78bd881ecca15494945))
 
 
 
