@@ -1,7 +1,16 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.0/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.0.5/schema.json",
+  "files": {
+    "ignoreUnknown": false,
+    "ignore": [
+      "**/dist",
+      "**/build",
+      "**/.next",
+      "**/out",
+      "**/coverage",
+      "**/node_modules",
+      "**/.turbo"
+    ]
   },
   "linter": {
     "enabled": true,
@@ -26,32 +35,18 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "lineWidth": 100,
-    "attributePosition": "auto"
+    "lineWidth": 100
   },
   "javascript": {
     "formatter": {
       "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",
-      "trailingComma": "es5",
+      "trailingCommas": "es5",
       "semicolons": "always",
       "arrowParentheses": "always",
       "bracketSpacing": true,
       "bracketSameLine": false,
       "quoteStyle": "single"
     }
-  },
-  "files": {
-    "ignore": [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/.next/**",
-      "**/out/**",
-      "**/coverage/**",
-      "**/.turbo/**",
-      "**/build/**",
-      "**/*.min.js",
-      "**/*.min.css"
-    ]
   }
 }
