@@ -1,7 +1,7 @@
 {
   "name": "aicd",
   "version": "0.2.1",
-  "private": true,
+  "private": false,
   "description": "AI-powered continuous deployment platform",
   "author": "zopio",
   "license": "MIT",
