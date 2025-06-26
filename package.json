@@ -21,6 +21,7 @@
   "scripts": {
     "analyze": "turbo run analyze",
     "lint": "turbo run lint",
+    "lint:fix": "biome check --write .",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "build": "turbo run build",
@@ -28,6 +29,7 @@
     "dev": "turbo run dev",
     "clean": "turbo run clean",
     "format": "biome format --write .",
+    "format:fix": "biome format --write .",
     "check": "biome check .",
     "prepare": "husky install"
   },
