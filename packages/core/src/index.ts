@@ -17,4 +17,14 @@ export function validateInput(input: string): boolean {
   return input.trim().length > 0;
 }
 
+/**
+ * Format a message with timestamp for logging
+ * @param message - The message to format
+ * @returns Formatted message with timestamp
+ */
+export function formatMessage(message: string): string {
+  const timestamp = new Date().toISOString();
+  return `[${timestamp}] ${message}`;
+}
+
 export * from './types';
