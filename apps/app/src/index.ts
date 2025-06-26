@@ -1,6 +1,6 @@
+import { authenticate } from '@aicd/auth';
 // Mobile/Desktop App Entry Point
 import { log } from '@aicd/core';
-import { authenticate } from '@aicd/auth';
 
 log('Starting AICD App...');
 
@@ -8,7 +8,7 @@ log('Starting AICD App...');
 export function initApp() {
   const token = 'placeholder-token';
   const user = authenticate(token);
-  
+
   if (user) {
     log(`User authenticated: ${user.email}`);
   } else {
