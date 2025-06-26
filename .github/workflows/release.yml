@@ -87,7 +87,7 @@ jobs:
       # Run auto to handle versioning, changelog, and publishing
       - name: Create Release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # For GitHub releases and commits
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}       # For GitHub releases and commits
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}     # For NPM package publishing
         run: npx auto shipit
         # Continue on error to prevent workflow failures if release already exists
