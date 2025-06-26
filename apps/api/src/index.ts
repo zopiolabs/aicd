@@ -1,7 +1,6 @@
-import { authenticate, createToken } from '@aicd/auth';
 // API Server Entry Point
 import { log } from '@aicd/core';
-import Database from '@aicd/database';
+import { Database } from '@aicd/database';
 
 log('Starting AICD API Server...');
 
