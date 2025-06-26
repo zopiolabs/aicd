@@ -48,3 +48,7 @@ yarn-error.log*
 .windsurfrules
 .github/copilot-instructions.md
 .aiprompts
+
+# Misc.
+branch-*.json
+tsconfig.tsbuildinfo
