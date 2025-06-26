@@ -4,10 +4,12 @@
 ### Bug Fixes
 
 * add release as valid PR type in validation workflow ([f07278a](https://github.com/aicd/aicd/commit/f07278a379c969a1522812ab6fdb74b97c62838e))
+* add tsconfig reference to tsup configuration ([0158d21](https://github.com/aicd/aicd/commit/0158d21568b1f9d791e4755c1557fbf308b51d50))
 * changelog generation with proper package.json version updates ([dc24ad8](https://github.com/aicd/aicd/commit/dc24ad8715b47d51cc4b0b7e0ee51f27ef885bb6))
 * resolve all PR [#6](https://github.com/aicd/aicd/issues/6) blocking issues ([cb5488e](https://github.com/aicd/aicd/commit/cb5488ee04c349825055962422d7a74ce9c699df))
 * resolve PR [#6](https://github.com/aicd/aicd/issues/6) blocking issues ([622b4ed](https://github.com/aicd/aicd/commit/622b4ed81d926201e1573389be3683937ed0097a))
 * resolve release workflow issues for branch protection and build dependencies ([a08f2eb](https://github.com/aicd/aicd/commit/a08f2eb2f2d19dbd2396e94df2e39ee1950e79e4))
+* resolve tsup TypeScript incremental build error ([f901bdb](https://github.com/aicd/aicd/commit/f901bdb5fc958e1a2beef035184c03af9b69e44e))
 * resolve TypeScript unused import errors ([345fbd1](https://github.com/aicd/aicd/commit/345fbd13ec762c4350e354ad3b30ded63afc4797))
 * update pnpm version to match CI workflows ([1c11fe7](https://github.com/aicd/aicd/commit/1c11fe7c36867cc68c053fd67d97e50a851841f1))
 
