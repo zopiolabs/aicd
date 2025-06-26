@@ -1,0 +1,193 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev: Start All Services",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["dev"],
+      "group": {
+        "kind": "none",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true,
+        "echo": true,
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "isBackground": true,
+      "detail": "Start all applications and packages in development mode using Turborepo"
+    },
+    {
+      "label": "Build: Entire Monorepo",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["build"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": false,
+        "echo": true,
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": ["$tsc"],
+      "detail": "Build all packages and applications in dependency order"
+    },
+    {
+      "label": "Test: Run All Tests",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["test"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": false,
+        "echo": true,
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": [],
+      "detail": "Run all tests across the entire monorepo using Vitest"
+    },
+    {
+      "label": "Code Check: Full Validation",
+      "dependsOrder": "sequence",
+      "dependsOn": ["Code Check: Lint", "Code Check: Format", "Code Check: Type Check"],
+      "group": {
+        "kind": "none",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": false,
+        "echo": true,
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Run linting, formatting, and type checking across the entire codebase"
+    },
+    {
+      "label": "Code Check: Lint",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["lint"],
+      "group": "none",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "focus": false,
+        "echo": true,
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Run Biome linter"
+    },
+    {
+      "label": "Code Check: Format",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["format"],
+      "group": "none",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "focus": false,
+        "echo": true,
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Format code using Biome"
+    },
+    {
+      "label": "Code Check: Type Check",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["typecheck"],
+      "group": "none",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "focus": false,
+        "echo": true,
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": ["$tsc"],
+      "detail": "Run TypeScript type checking"
+    },
+    {
+      "label": "Code Check: Full Validation + Autofix",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Code Check: Lint Autofix",
+        "Code Check: Format Autofix",
+        "Code Check: Type Check"
+      ],
+      "group": {
+        "kind": "none",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": false,
+        "echo": true,
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Run linting, formatting with autofix, and type checking across the entire codebase"
+    },
+    {
+      "label": "Code Check: Lint Autofix",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["lint:fix"],
+      "group": "none",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "focus": false,
+        "echo": true,
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Run Biome linter with autofix"
+    },
+    {
+      "label": "Code Check: Format Autofix",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["format:fix"],
+      "group": "none",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "focus": false,
+        "echo": true,
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "detail": "Format code using Biome with autofix"
+    }
+  ]
+}
