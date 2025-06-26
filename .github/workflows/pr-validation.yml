@@ -42,7 +42,15 @@ jobs:
         with:
           script: |
             const branchName = context.payload.pull_request?.head?.ref || context.ref.replace('refs/heads/', '');
+            const targetBranch = context.payload.pull_request?.base?.ref;
             console.log(`Checking branch name: ${branchName}`);
+            console.log(`Target branch: ${targetBranch}`);
+            
+            // Special case: Allow staging → main PRs as part of git flow
+            if (context.payload.pull_request && branchName === 'staging' && targetBranch === 'main') {
+              console.log(`✅ Staging → main PR is allowed as part of git flow process.`);
+              return;
+            }
             
             const patterns = [
               /^main$/,

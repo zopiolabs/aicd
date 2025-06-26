@@ -15,5 +15,3 @@ export class Database {
     console.log('Disconnecting from database...');
   }
 }
-
-export default Database;
