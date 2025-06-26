@@ -1,6 +1,6 @@
 {
   "name": "aicd",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": false,
   "description": "AI-powered continuous deployment platform",
   "author": "zopio",
@@ -37,7 +37,9 @@
     "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
       "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
     ],
-    "**/*.{js,jsx,ts,tsx}": ["bash -c 'tsc --noEmit --skipLibCheck'"]
+    "**/*.{js,jsx,ts,tsx}": [
+      "bash -c 'tsc --noEmit --skipLibCheck'"
+    ]
   },
   "devDependencies": {
     "@biomejs/biome": "^1.5.0",
