@@ -49,4 +49,22 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# Run Cascade auto-fix and refactor
+echo "🔧 Running Cascade auto-fix and refactor..."
+
+# Check if Cascade CLI is available
+if ! command -v cascade &> /dev/null; then
+  echo "${YELLOW}⚠️  Cascade CLI not found. Skipping auto-fix and refactor.${NC}"
+else
+  # Run biome check first if available and create output
+  if command -v biome &> /dev/null; then
+    biome check . --json > biome.json 2>/dev/null || true
+    node ./scripts/cascade-fix.js --from=biome.json --apply
+    rm biome.json 2>/dev/null || true
+  fi
+  
+  # Run refactor script for performance optimizations
+  node ./scripts/cascade-refactor.js --strategy=performance --apply
+fi
+
 echo "${GREEN}✅ Pre-commit checks passed!${NC}"
