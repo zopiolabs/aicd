@@ -1,8 +1,13 @@
 // Core utilities and shared code
+import { logger } from './logger';
+
 export const VERSION = '0.0.1';
 
+/**
+ * @deprecated Use logger.info() instead
+ */
 export function log(message: string): void {
-  console.log(`[AICD Core]: ${message}`);
+  logger.info(message);
 }
 
 /**
@@ -28,3 +33,5 @@ export function formatMessage(message: string): string {
 }
 
 export * from './types';
+export * from './logger';
+export * from './errors';
